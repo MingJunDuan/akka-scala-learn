@@ -11,7 +11,6 @@ class PingPongTest(_system: ActorSystem) extends TestKit(_system)
   with Matchers
   with FlatSpecLike
   with BeforeAndAfterAll {
-
     //构造方法
     def this() = this(ActorSystem("akkaSystem"))
 
