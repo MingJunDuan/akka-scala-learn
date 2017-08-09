@@ -1,14 +1,12 @@
 package chapter4_faultTolerance.example2
 
 import java.util.concurrent.TimeUnit
-
 import akka.actor.SupervisorStrategy.Stop
 import akka.actor.{Actor, ActorLogging, ActorRef, OneForOneStrategy, Props}
 import akka.event.LoggingReceive
 import akka.util.Timeout
-import chapter4_faultTolerance.example2.CounterService.{CurrentCount, GetCurrentCount, Increment}
-import chapter4_faultTolerance.example2.Worker.{Do, Progress, Start}
-
+import chapter4_faultTolerance.example2.CounterService.Increment
+import chapter4_faultTolerance.example2.Worker.{Do, Start}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 
@@ -22,7 +20,7 @@ private[example2] class Worker extends Actor with ActorLogging {
     }
     val counterService = context.actorOf(Props[CounterService], name = "counter")
     val totalCount = 51
-    var progressListener: Option[ActorRef] = None
+    var progressListener: Option[ActorRef] = None  //listener Actor
 
     override def receive = LoggingReceive {
         case Start if progressListener.isEmpty => processStartWithProcessListenerEmpty()
@@ -31,6 +29,7 @@ private[example2] class Worker extends Actor with ActorLogging {
 
     def processStartWithProcessListenerEmpty() = {
         progressListener = Some(sender())
+        //Send Do to self per second
         context.system.scheduler.schedule(Duration.Zero, Duration.apply(1, TimeUnit.SECONDS), self, Do)
     }
 

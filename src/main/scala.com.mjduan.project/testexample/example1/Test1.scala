@@ -1,4 +1,4 @@
-package testexample
+package testexample.example1
 
 import akka.actor.{Actor, ActorSystem, Props}
 
